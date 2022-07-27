@@ -13,7 +13,7 @@ class PostController extends Controller
         $posts = Post::where('published', true)
                     ->with(['category', 'tags', 'user'])
                     ->get();
-        return response()->json($posts);
+        return $posts;
     }
 
     public function show($slug)
@@ -21,6 +21,6 @@ class PostController extends Controller
         $post = Post::where('slug', $slug)
                     ->with(['category', 'tags', 'user'])
                     ->first();
-        return response()->json($post);
+        return $post;
     }
 }
