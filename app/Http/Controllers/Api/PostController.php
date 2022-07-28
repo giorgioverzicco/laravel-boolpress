@@ -21,6 +21,8 @@ class PostController extends Controller
         $post = Post::where('slug', $slug)
                     ->with(['category', 'tags', 'user'])
                     ->first();
-        return $post;
+        return $post ?? response([
+            'message' => "The post with slug {$slug} does not exists."
+        ], 404);;
     }
 }

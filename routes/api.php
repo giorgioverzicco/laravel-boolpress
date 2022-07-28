@@ -14,9 +14,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::namespace('Api')
-    ->prefix('posts')
-    ->group(function () {
-        Route::get('/', 'PostController@index');
-        Route::get('/{slug}', 'PostController@show');
-    });
+Route::apiResource('posts', 'Api\PostController')
+    ->only(['index', 'show']);
+
+Route::apiResource('categories', 'Api\CategoryController')
+    ->only(['index', 'show']);
