@@ -25,7 +25,16 @@
                 </div>
 
                 <div class="card-body">
-                    {{ post.content }}
+                    <img
+                        v-if="post.image"
+                        :src="post.image_path"
+                        alt=""
+                        width="300"
+                        height="300"
+                    />
+                    <div>
+                        {{ post.content }}
+                    </div>
                 </div>
             </div>
         </div>

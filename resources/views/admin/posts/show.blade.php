@@ -22,7 +22,12 @@
                     </div>
 
                     <div class="card-body">
-                        {{ $post->content }}
+                        @if($post->image)
+                            <img src="{{ asset($post->image_path) }}" alt="" width="300" height="300">
+                        @endif
+                        <div>
+                            {{ $post->content }}
+                        </div>
                     </div>
                 </div>
             </div>

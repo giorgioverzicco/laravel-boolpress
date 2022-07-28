@@ -2438,7 +2438,14 @@ var render = function render() {
     }, [_vm._v("#" + _vm._s(tag.name))]);
   }), 0) : _vm._e()]), _vm._v(" "), _c("div", {
     staticClass: "card-body"
-  }, [_vm._v("\n                " + _vm._s(_vm.post.content) + "\n            ")])]) : _vm._e()])]);
+  }, [_vm.post.image ? _c("img", {
+    attrs: {
+      src: _vm.post.image_path,
+      alt: "",
+      width: "300",
+      height: "300"
+    }
+  }) : _vm._e(), _vm._v(" "), _c("div", [_vm._v("\n                    " + _vm._s(_vm.post.content) + "\n                ")])])]) : _vm._e()])]);
 };
 
 var staticRenderFns = [];

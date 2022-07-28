@@ -11,6 +11,12 @@ class Post extends Model
     use HasSlug;
 
     protected $guarded = ['slug', 'tags'];
+    protected $appends = ['image_path'];
+
+    public function getImagePathAttribute()
+    {
+        return $this->image ? asset("storage/{$this->image}") : null;
+    }
 
     public function category()
     {

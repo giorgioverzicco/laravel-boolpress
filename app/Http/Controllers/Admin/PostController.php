@@ -8,9 +8,19 @@ use App\Post;
 use App\Tag;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
 {
+    private $validation = [
+        'title' => 'required|max:255',
+        'category_id' => 'nullable|integer|exists:categories,id',
+        'content' => 'required',
+        'tags' => 'nullable|exists:tags,id',
+        'published' => 'sometimes|accepted',
+        'image' => 'nullable|sometimes|image|max:500'
+    ];
+
     /**
      * Display a listing of the resource.
      *
@@ -43,13 +53,7 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'title' => 'required|max:255',
-            'category_id' => 'nullable|integer|exists:categories,id',
-            'content' => 'required',
-            'tags' => 'nullable|exists:tags,id',
-            'published' => 'sometimes|accepted'
-        ]);
+        $request->validate($this->validation);
 
         $data = $request->all();
         $data['published'] = isset($data['published']);
@@ -57,6 +61,11 @@ class PostController extends Controller
         $post = new Post();
         $post->fill($data);
         $post->user_id = Auth::id();
+
+        if (isset($data['image'])) {
+            $post->image = Storage::put('uploads', $data['image']);
+        }
+        
         $post->save();
 
         if (isset($data['tags'])) {
@@ -103,16 +112,18 @@ class PostController extends Controller
      */
     public function update(Request $request, Post $post)
     {
-        $request->validate([
-            'title' => 'required|max:255',
-            'category_id' => 'nullable|integer|exists:categories,id',
-            'content' => 'required',
-            'tags' => 'nullable|exists:tags,id',
-            'published' => 'sometimes|accepted'
-        ]);
+        $request->validate($this->validation);
 
         $data = $request->all();
         $data['published'] = isset($data['published']);
+
+        if (isset($data['image'])) {
+            if ($post->image) {
+                Storage::delete($post->image);
+            }
+
+            $data['image'] = Storage::put('uploads', $data['image']);
+        }
 
         $post->update($data);
 
@@ -129,6 +140,10 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
+        if ($post->image) {
+            Storage::delete($post->image);
+        }
+        
         $post->delete();
 
         return redirect()->route('admin.posts.index');
